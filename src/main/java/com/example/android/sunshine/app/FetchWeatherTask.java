@@ -39,7 +39,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-//TODO Passo 11: Excluir FetchWeather antigo.
 public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
@@ -61,7 +60,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
      * @param lon the longitude of the city
      * @return the row ID of the added location.
      */
-   //TODO Passo 13: Escrever addLocation
     long addLocation(String locationSetting, String cityName, double lat, double lon) {
         long locationId;
 
@@ -233,7 +231,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 cVVector.add(weatherValues);
             }
 
-            int inserted = 0; //TODO Passo 14: inserção em lote no BD
+            int inserted = 0;
             // add to database
             if ( cVVector.size() > 0 ) {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
@@ -319,7 +317,9 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 return null;
             }
             forecastJsonStr = buffer.toString();
+
             getWeatherDataFromJson(forecastJsonStr, locationQuery);
+
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             // If the code didn't successfully get the weather data, there's no point in attempting

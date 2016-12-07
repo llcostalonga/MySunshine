@@ -26,7 +26,8 @@ import android.text.format.Time;
  */
 public class WeatherContract {
 
-    //TODO Passo 2: Atualizar o Contrato com a definição os URI's que acessarao os dados
+
+    //TODO 1 - Adicionar URI no Contrato
 
     // The "Content authority" is a name for the entire content provider, similar to the
     // relationship between a domain name and its website.  A convenient string to use for the
@@ -62,8 +63,11 @@ public class WeatherContract {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOCATION).build();
 
+
+        // TODO 1.3 :  Tipos de Cursors (DIR e Item)
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOCATION;
+
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOCATION;
 
@@ -132,6 +136,8 @@ public class WeatherContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
+
+       //TODO 1.1: funcoes para ajudar a construir a URI
         /*
             Student: This is the buildWeatherLocation function you filled in.
          */

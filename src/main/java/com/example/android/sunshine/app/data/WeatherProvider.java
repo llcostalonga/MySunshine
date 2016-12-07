@@ -24,28 +24,25 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
-//TODO Passo 1: Criar o WeatherProvider estendendo a classe ContentProvider
+//TODO 3: Criar subclasse ContentProvider
 public class WeatherProvider extends ContentProvider {
 
     // The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private WeatherDbHelper mOpenHelper;
 
-    //TODO Passo 3.1: Amarração de tipos de URI a constants (int)...facilita a programacao.
     static final int WEATHER = 100;
     static final int WEATHER_WITH_LOCATION = 101;
     static final int WEATHER_WITH_LOCATION_AND_DATE = 102;
     static final int LOCATION = 300;
 
-
     private static final SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
 
     static{
         sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
-
+        
         //This is an inner join which looks like
         //weather INNER JOIN location ON weather.location_id = location._id
-        //TODO Passo 8:   JOIN entre as tabelas
         sWeatherByLocationSettingQueryBuilder.setTables(
                 WeatherContract.WeatherEntry.TABLE_NAME + " INNER JOIN " +
                         WeatherContract.LocationEntry.TABLE_NAME +
@@ -55,7 +52,6 @@ public class WeatherProvider extends ContentProvider {
                         "." + WeatherContract.LocationEntry._ID);
     }
 
-   //TODO Passo 9: Especificar os selections sXXXX
     //location.location_setting = ?
     private static final String sLocationSettingSelection =
             WeatherContract.LocationEntry.TABLE_NAME+
@@ -113,13 +109,14 @@ public class WeatherProvider extends ContentProvider {
         );
     }
 
+
+  //TODO 2.1: Construir o buildUriMatcher
     /*
         Students: Here is where you need to create the UriMatcher. This UriMatcher will
         match each URI to the WEATHER, WEATHER_WITH_LOCATION, WEATHER_WITH_LOCATION_AND_DATE,
         and LOCATION integer constants defined above.  You can test this by uncommenting the
         testUriMatcher test within TestUriMatcher.
      */
-    //TODO Passo 3: Escrever o UriMatcher
     static UriMatcher buildUriMatcher() {
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
         // expressions instead?  Because you're not crazy, that's why.
@@ -143,8 +140,6 @@ public class WeatherProvider extends ContentProvider {
         Students: We've coded this for you.  We just create a new WeatherDbHelper for later use
         here.
      */
-
-   //TODO Passo 5.1: Implementar onCreate
     @Override
     public boolean onCreate() {
         mOpenHelper = new WeatherDbHelper(getContext());
@@ -156,7 +151,6 @@ public class WeatherProvider extends ContentProvider {
         test this by uncommenting testGetType in TestProvider.
 
      */
-    //TODO Passo 5.6: Implementar getType
     @Override
     public String getType(Uri uri) {
 
@@ -178,7 +172,6 @@ public class WeatherProvider extends ContentProvider {
         }
     }
 
-    //TODO Passo 5.2: Implementar Query
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
@@ -198,7 +191,7 @@ public class WeatherProvider extends ContentProvider {
                 break;
             }
             // "weather"
-            case WEATHER: { //todo Passo 5.2.2: Rodando uma pesquisa no BD
+            case WEATHER: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         WeatherContract.WeatherEntry.TABLE_NAME,
                         projection,
@@ -227,7 +220,6 @@ public class WeatherProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        //TODO Passo 5.2.1:Não esqueca de pedir que Cursor seja notificado quando houver mudança nos dados.
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
@@ -235,7 +227,6 @@ public class WeatherProvider extends ContentProvider {
     /*
         Student: Add the ability to insert Locations to the implementation of this function.
      */
-    //TODO Passo 5.3: Implementar Insert
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -247,7 +238,7 @@ public class WeatherProvider extends ContentProvider {
                 normalizeDate(values);
                 long _id = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
-                    returnUri = WeatherContract.WeatherEntry.buildWeatherUri(_id);//TODO Passo 5.3.1
+                    returnUri = WeatherContract.WeatherEntry.buildWeatherUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -263,11 +254,10 @@ public class WeatherProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null); //TODO Passo 5.3.2 - Notificar que houve modificacao dos valores
+        getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
 
-    //TODO Passo 5.5: Implementar Delete
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -302,7 +292,6 @@ public class WeatherProvider extends ContentProvider {
         }
     }
 
-    //TODO Passo 5.4: Implementar Update
     @Override
     public int update(
             Uri uri, ContentValues values, String selection, String[] selectionArgs) {
@@ -329,7 +318,6 @@ public class WeatherProvider extends ContentProvider {
         return rowsUpdated;
     }
 
-    //TODO Passo 10: Transaction são mais rápidas (opcional)
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();

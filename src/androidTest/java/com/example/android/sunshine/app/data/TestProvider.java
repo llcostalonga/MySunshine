@@ -132,7 +132,6 @@ public class TestProvider extends AndroidTestCase {
             Students: Uncomment this test to verify that your implementation of GetType is
             functioning correctly.
          */
-    //TODO Passo 6: Descomentar o testGetType para testar o content provider.
     public void testGetType() {
         // content://com.example.android.sunshine.app/weather/
         String type = mContext.getContentResolver().getType(WeatherEntry.CONTENT_URI);
@@ -169,7 +168,6 @@ public class TestProvider extends AndroidTestCase {
         read out the data.  Uncomment this test to see if the basic weather query functionality
         given in the ContentProvider is working correctly.
      */
-    //TODO Passo 7: Descomente para ver se esta OK.
     public void testBasicWeatherQuery() {
         // insert our test records into the database
         WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
